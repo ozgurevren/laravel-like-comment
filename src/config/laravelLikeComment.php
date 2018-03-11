@@ -1,4 +1,6 @@
 <?php
 return [
-    'userModel' => 'App\User'
+    'userModel' => 'App\User',
+    'autoShowComments' => true,
+    'maxCommentLength' => 500
 ];

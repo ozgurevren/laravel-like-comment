@@ -1,3 +1,14 @@
+$(document).ready(function(){
+  if($('#showComment').data('auto-show'))
+  {
+    var show = $('#showComment').data("show-comment");
+    $('.show-'+$('#showComment').data("item-id")+'-'+show).fadeIn('normal');
+    $('#showComment').data("show-comment", show+1);
+    $('#showComment').text("Show more");
+  }
+  
+});
+
 $('.laravelLike-icon').on('click', function(){
   if($(this).hasClass('disabled'))
     return false;
@@ -30,10 +41,10 @@ $('.laravelLike-icon').on('click', function(){
       }
     })
     .fail(function(msg){
-      alert(msg);
     });
 });
 
+var maxLength = $('#0-textarea').attr('maxlength');
 
 $(document).on('click', '.reply-button', function(){
   if($(this).hasClass("disabled"))
@@ -56,14 +67,22 @@ $(document).on('submit', '.laravelComment-form', function(){
       })
       .done(function(msg){
         $(thisForm).toggle('normal');
-        var newComment = '<div class="comment" id="comment-'+msg.id+'" style="display: initial;"><a class="avatar"><img src="'+msg.userPic+'"></a><div class="content"><a class="author">'+msg.userName+'</a><div class="metadata"><span class="date">Today at 5:42PM</span></div><div class="text">'+msg.comment+'</div><div class="actions"><a class="reply reply-button" data-toggle="'+msg.id+'-reply-form">Reply</a></div><form class="ui laravelComment-form form" id="'+msg.id+'-reply-form" data-parent="'+msg.id+'" data-item="'+item_id+'" style="display: none;"><div class="field"><textarea id="'+msg.id+'-textarea" rows="2"></textarea></div><input type="submit" class="ui basic small submit button" value="Reply"></form></div><div class="ui threaded comments" id="'+item_id+'-comment-'+msg.id+'"></div></div>';
+        var newComment = '<div class="comment" id="comment-'+msg.id+'" style="display: block;"><a class="avatar"><img src="'+msg.userPic+'"></a><div class="content"><a class="author">'+msg.userName+'</a><div class="metadata"><span class="date">Today at 5:42PM</span></div><div class="text">'+msg.comment+'</div><div class="actions"><a class="reply reply-button" data-toggle="'+msg.id+'-reply-form">Reply</a></div><form class="ui laravelComment-form form" id="'+msg.id+'-reply-form" data-parent="'+msg.id+'" data-item="'+item_id+'" style="display: none;"><div class="field"><textarea id="'+msg.id+'-textarea" rows="2" maxlength="'+maxLength+'"></textarea><small><span id="'+msg.id+'-chars">'+maxLength+'</span> characters left</small></div><input type="submit" class="ui basic small submit button" value="Reply"></form></div><div class="ui threaded comments" id="'+item_id+'-comment-'+msg.id+'"></div></div>';
         $('#'+item_id+'-comment-'+parent).prepend(newComment);
         $('textarea#'+parent+'-textarea').val('');
       })
-      .fail(function(msg){
-        alert(msg);
+      .fail(function(jqXHR, textStatus, errorThrown){
+        console.log(jqXHR);
+        if(comment == '')
+        {
+          alert('Please write something!');
+        }
+        else{
+          alert('Unknown error!');
+        }
       });
 
+    $('#write-comment').show();
     return false;
 });
 
@@ -76,7 +95,19 @@ $(document).on('click', '#showComment', function(){
 });
 
 
+var length = 0;
+
 $(document).on('click', '#write-comment', function(){
+    $('#'+$($(this).data("form")).data('parent')+'-chars').text(maxLength);
     $($(this).data("form")).show();
+    $(this).hide();
+    length = 0;
 });
 
+
+
+$(document).on('input', 'textarea', function() {
+  length = $(this).val().length;
+  length = maxLength-length;
+  $('#'+$(this).parents('form:first').data('parent')+'-chars').text(length);
+});

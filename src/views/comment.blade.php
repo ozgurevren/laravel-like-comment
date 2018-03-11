@@ -3,16 +3,20 @@ $GLOBALS['commentDisabled'] = "";
 if(!Auth::check())
     $GLOBALS['commentDisabled'] = "disabled";
 $GLOBALS['commentClass'] = -1;
+$GLOBALS['autoShow'] = (config('laravelLikeComment.autoShowComments')) ? 'true' : 'false';
+$GLOBALS['maxCommentLength'] = config('laravelLikeComment.maxCommentLength');
 ?>
 <div class="laravelComment" id="laravelComment-{{ $comment_item_id }}">
     <h3 class="ui dividing header">Comments</h3>
     <div class="ui threaded comments" id="{{ $comment_item_id }}-comment-0">
-        <button class="ui basic small submit button" id="write-comment" data-form="#{{ $comment_item_id }}-comment-form">Write comment</button>
+        <button class="ui basic small submit button dividing header" id="write-comment" data-form="#{{ $comment_item_id }}-comment-form" style="margin-top: 2em;">Write comment</button>
         <form class="ui laravelComment-form form" id="{{ $comment_item_id }}-comment-form" data-parent="0" data-item="{{ $comment_item_id }}" style="display: none;">
             <div class="field">
-                <textarea id="0-textarea" rows="2" {{ $GLOBALS['commentDisabled'] }}></textarea>
+                <textarea id="0-textarea" rows="2" maxlength="{{$GLOBALS['maxCommentLength']}}" {{ $GLOBALS['commentDisabled'] }}></textarea>
                 @if(!Auth::check())
                     <small>Please Log in to comment</small>
+                @else
+                    <small><span id="0-chars">{{$GLOBALS['maxCommentLength']}}</span> characters left</small>
                 @endif
             </div>
             <input type="submit" class="ui basic small submit button" value="Comment" {{ $GLOBALS['commentDisabled'] }}>
@@ -45,6 +49,8 @@ function dfs($comments, $comment){
                     <textarea id="{{ $comment->id }}-textarea" rows="2" {{ $GLOBALS['commentDisabled'] }}></textarea>
                     @if(!Auth::check())
                         <small>Please Log in to comment</small>
+                    @else
+                    <small><span id="{{ $comment->id }}-chars">{{$GLOBALS['maxCommentLength']}}</span> characters left</small>
                     @endif
                 </div>
                 <input type="submit" class="ui basic small submit button" value="Comment" {{ $GLOBALS['commentDisabled'] }}>
@@ -69,5 +75,5 @@ foreach ($comments as $comment) {
 }
 ?>
     </div>
-    <button class="ui basic button" id="showComment" data-show-comment="0" data-item-id="{{ $comment_item_id }}">Show comments</button>
+    <button class="ui basic button" id="showComment" data-auto-show="{{ $GLOBALS['autoShow'] }}" data-show-comment="0" data-item-id="{{ $comment_item_id }}">Show comments</button>
 </div>

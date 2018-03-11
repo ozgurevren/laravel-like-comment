@@ -17,7 +17,7 @@ class CreateLaravellikecommetCommentsTable extends Migration
             $table->integer('user_id');
             $table->integer('parent_id');
             $table->string('item_id'); // ModelName_modelId
-            $table->string('comment');
+            $table->string('comment', config('laravelLikeComment.maxCommentLength'));
             $table->timestamps();
         });
     }
