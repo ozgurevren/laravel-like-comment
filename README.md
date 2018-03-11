@@ -1,7 +1,3 @@
-[![Latest Stable Version](https://poser.pugx.org/risul/laravel-like-comment/v/stable)](https://packagist.org/packages/risul/laravel-like-comment)
-[![Total Downloads](https://poser.pugx.org/risul/laravel-like-comment/downloads)](https://packagist.org/packages/risul/laravel-like-comment)
-[![License](https://poser.pugx.org/risul/laravel-like-comment/license)](https://packagist.org/packages/risul/laravel-like-comment)
-
 Laravel like comment (forked from risul3/laravel-like-comment)
 =====================
 
