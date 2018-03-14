@@ -9,7 +9,7 @@ $GLOBALS['maxCommentLength'] = config('laravelLikeComment.maxCommentLength');
 <div class="laravelComment" id="laravelComment-{{ $comment_item_id }}">
     <h3 class="ui dividing header">Comments</h3>
     <div class="ui threaded comments" id="{{ $comment_item_id }}-comment-0">
-        <button class="ui basic small submit button dividing header" id="write-comment" data-form="#{{ $comment_item_id }}-comment-form" style="margin-top: 2em;">Write comment</button>
+        <button class="ui basic small submit button dividing header" id="write-comment" data-form="#{{ $comment_item_id }}-comment-form">Write comment</button>
         <form class="ui laravelComment-form form" id="{{ $comment_item_id }}-comment-form" data-parent="0" data-item="{{ $comment_item_id }}" style="display: none;">
             <div class="field">
                 <textarea id="0-textarea" rows="2" maxlength="{{$GLOBALS['maxCommentLength']}}" {{ $GLOBALS['commentDisabled'] }}></textarea>
@@ -41,9 +41,10 @@ function dfs($comments, $comment){
                 {{ $comment->comment }}
             </div>
             <div class="actions">
-                <a class="{{ $GLOBALS['commentDisabled'] }} reply reply-button" data-toggle="{{ $comment->id }}-reply-form">Reply</a>
+                <a class="{{ $GLOBALS['commentDisabled'] }} reply reply-button" data-toggle="{{ $comment->id }}-reply-form" data-parent="{{ $comment -> id}}">Reply</a>
+                {{ \risul\LaravelLikeComment\Controllers\CommentController::viewLike('comment-'.$comment->id) }}
             </div>
-            {{ \risul\LaravelLikeComment\Controllers\CommentController::viewLike('comment-'.$comment->id) }}
+            
             <form id="{{ $comment->id }}-reply-form" class="ui laravelComment-form form" data-parent="{{ $comment->id }}" data-item="{{ $comment->item_id }}" style="display: none;">
                 <div class="field">
                     <textarea id="{{ $comment->id }}-textarea" rows="2" {{ $GLOBALS['commentDisabled'] }}></textarea>
@@ -56,14 +57,30 @@ function dfs($comments, $comment){
                 <input type="submit" class="ui basic small submit button" value="Comment" {{ $GLOBALS['commentDisabled'] }}>
             </form>
         </div>
-        <div class="comments" id="{{ $comment->item_id }}-comment-{{ $comment->id }}">
+        <!--<div class="comments" id="{{ $comment->item_id }}-comment-{{ $comment->id }}"> -->
 <?php
-    foreach ($comments as $child) {
-        if($child->parent_id == $comment->id && !isset($GLOBALS['commentVisit'][$child->id])){
-            dfs($comments, $child);
+    $hasChild = 0;
+    foreach ($comments as $isChild) {
+        
+        if($isChild -> parent_id == $comment -> id)
+        {
+            $hasChild = 1;
         }
     }
+    if ($hasChild == 1){
+        echo '<div class="comments" id="'.$comment->item_id.'-comment-'.$comment->id.'">';
+    }
+
+    foreach ($comments as $child) {
+
+        if($child->parent_id == $comment->id && !isset($GLOBALS['commentVisit'][$child->id])){
+            dfs($comments, $child);
+            
+        }
+    }
+    if ($hasChild == 1){
     echo "</div>";
+    }
     echo "</div>";
 }
 
