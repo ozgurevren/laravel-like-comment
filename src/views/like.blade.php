@@ -13,5 +13,5 @@
 	   data-item-id="{{ $like_item_id }}"
 	   data-vote="-1">
    </i>
-   <span id="{{ $like_item_id }}-total-dislike">{{ $data[$like_item_id.'total_dislike'] }}</span>
+   <span id="{{ $like_item_id }}-total-dislike">{{ $data[$like_item_id.'total_dislike'] }} </span>
 </div>

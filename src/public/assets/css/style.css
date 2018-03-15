@@ -1,3 +1,7 @@
+.laravel-like{
+	display: inline;
+}
+
 .laravelLike-icon{
 	cursor: pointer;
 }
@@ -11,3 +15,7 @@
 .comment{
     display: none;
 }    
+
+.laravelComment-form{
+	margin: 1em;
+}
